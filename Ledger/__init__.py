@@ -80,6 +80,10 @@ class Ledger:
         rolled back automatically on failure.
         '''
         with self.engine.begin() as conn:
+            # Task 3: serialize transfers by locking the balances table.
+            sql = text('LOCK TABLE balances IN ACCESS EXCLUSIVE MODE;')
+            logging.debug(sql)
+            conn.execute(sql)
 
             # Lock both accounts in a deterministic order.
             # This prevents concurrent transfers from
